@@ -1,0 +1,16 @@
+[package]
+name = "bswap"
+version = "0.1.0"
+authors = ["PicoJr <PicoJr@notanemail.com>"]
+edition = "2018"
+description = "byte swap lib"
+license = "MIT or Apache-2.0"
+readme = "README.md"
+keywords = ["byte", "swap", "lib"]
+categories = ["science"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+
+[dev-dependencies]
