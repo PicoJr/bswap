@@ -5,7 +5,7 @@
 //! ## Iterators
 //!
 //! ```
-//! use bswap::pattern::{BytePattern, Locality, iter_swap};
+//! use bswp::pattern::{BytePattern, Locality, iter_swap};
 //!
 //! let pattern = BytePattern::new(0x42, 0xFF); // replace byte by 0x42
 //! let locality = Locality::new(2, 1); // replace odd bytes
@@ -21,9 +21,9 @@
 //!
 //! ```
 //! use std::io::Cursor;
-//! use bswap::pattern::{BytePattern, Locality};
-//! use bswap::Swap;
-//! use bswap::io::swap_io;
+//! use bswp::pattern::{BytePattern, Locality};
+//! use bswp::Swap;
+//! use bswp::io::swap_io;
 //!
 //! // in memory reader (implements `Read`)
 //! let mut reader: Cursor<Vec<u8>> = Cursor::new(vec![0x41, 0x42, 0x43, 0x44]);

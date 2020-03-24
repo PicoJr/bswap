@@ -15,9 +15,9 @@ use std::io::{Read, Write};
 ///
 /// ```
 /// use std::io::Cursor;
-/// use bswap::pattern::{BytePattern, Locality};
-/// use bswap::Swap;
-/// use bswap::io::swap_io;
+/// use bswp::pattern::{BytePattern, Locality};
+/// use bswp::Swap;
+/// use bswp::io::swap_io;
 ///
 /// // in memory reader (implements `Read`)
 /// let mut reader: Cursor<Vec<u8>> = Cursor::new(vec![0x41, 0x42, 0x43, 0x44]);

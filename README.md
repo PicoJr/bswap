@@ -1,4 +1,12 @@
-# bswap
+[![rtw crate](https://img.shields.io/crates/v/rtw.svg)](https://crates.io/crates/bswp)
+[![rtw documentation](https://docs.rs/rtw/badge.svg)](https://docs.rs/bswp)
+[![GitHub license](https://img.shields.io/github/license/PicoJr/bswp)](https://github.com/PicoJr/bswp/blob/master/LICENSE)
+
+|Branch|Status|
+|------|------|
+|[master](https://github.com/PicoJr/bswp/tree/master)|![Build Status](https://github.com/PicoJr/bswp/workflows/Rust/badge.svg?branch=master)|
+
+# bswp
 
 Rust Byte Swap lib.
 

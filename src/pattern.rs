@@ -24,7 +24,7 @@ impl BytePattern {
     /// Creates a new `BytePattern` with provided `value` and `mask`.
     ///
     /// ```
-    /// # use bswap::pattern::BytePattern;
+    /// # use bswp::pattern::BytePattern;
     /// let byte_pattern = BytePattern::new(0xFF, 0xF0); // replace first 4 bits with 0xF
     /// ```
     pub fn new(value: u8, mask: u8) -> Self {
@@ -34,7 +34,7 @@ impl BytePattern {
     /// Returns the value with current pattern applied.
     ///
     /// ```
-    /// # use bswap::pattern::BytePattern;
+    /// # use bswp::pattern::BytePattern;
     /// let byte_pattern = BytePattern::new(0xFF, 0xF0);
     /// assert_eq!(byte_pattern.swap(0x00), 0xF0);
     /// let byte_pattern = BytePattern::new(0b10101111, 0b10011010);
@@ -49,7 +49,7 @@ impl Locality {
     /// Creates a new `Locality` with provided `periodicity` and `offset`.
     ///
     /// ```
-    /// # use bswap::pattern::Locality;
+    /// # use bswp::pattern::Locality;
     /// let locality = Locality::new(2, 3); // every 2 bytes for position >= 3
     /// ```
     pub fn new(periodicity: usize, offset: usize) -> Locality {
@@ -62,7 +62,7 @@ impl Locality {
     /// Returns `true` if `position` matches locality rules else `false`.
     ///
     /// ```
-    /// use bswap::pattern::Locality;
+    /// use bswp::pattern::Locality;
     /// let locality = Locality::new(2, 3);  // every 2 bytes for position >= 3
     /// assert!(!locality.applies(0));
     /// assert!(!locality.applies(1));
@@ -78,7 +78,7 @@ impl Locality {
 /// Returns an iterator on swapped bytes from `source`.
 ///
 /// ```
-/// use bswap::pattern::{Locality, BytePattern, iter_swap};
+/// use bswp::pattern::{Locality, BytePattern, iter_swap};
 /// let locality = Locality::new(2, 1);
 /// let pattern = BytePattern::new(0x42, 0xFF);
 /// let swap = (pattern, locality);
