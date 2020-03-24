@@ -1,5 +1,5 @@
-[![rtw crate](https://img.shields.io/crates/v/rtw.svg)](https://crates.io/crates/bswp)
-[![rtw documentation](https://docs.rs/rtw/badge.svg)](https://docs.rs/bswp)
+[![bswp crate](https://img.shields.io/crates/v/bswp.svg)](https://crates.io/crates/bswp)
+[![bswp documentation](https://docs.rs/bswp/badge.svg)](https://docs.rs/bswp)
 [![GitHub license](https://img.shields.io/github/license/PicoJr/bswp)](https://github.com/PicoJr/bswp/blob/master/LICENSE)
 
 |Branch|Status|
