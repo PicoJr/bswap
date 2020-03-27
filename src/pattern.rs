@@ -1,9 +1,8 @@
-//! Pattern, Locality and iterator utils (pure)
+//! Pattern, Predicate and iterator utils (pure)
 
 use crate::{BytePattern, PositionPredicate};
 
-/// Stores Pattern Position Predicate
-/// which bytes the pattern eval to given their position.
+/// Stores a predicate on byte position.
 #[non_exhaustive]
 pub struct Predicate {
     /// only match every `periodicity` bytes once the `offset` is reached.
@@ -64,7 +63,7 @@ impl BytePattern for Pattern {
 }
 
 impl Default for Predicate {
-    /// Creates a default `Locality`
+    /// Creates a default `Predicate`
     ///
     /// `periodicity`: `1` (every bytes)
     /// `offset`: `0` (starting from byte at position `0`)
@@ -79,13 +78,17 @@ impl Default for Predicate {
 }
 
 impl Predicate {
-    /// Creates a new `Locality` with default `periodicity`, `offest` and `limit`.
+    /// Creates a new `Predicate` with default `periodicity`, `offset` and `limit`.
     ///
-    /// returns `Locality {periodicity: 1, offset: 0, limit: None}`
+    /// returns `Predicate::default()`
     ///
     /// ```
     /// # use bswp::pattern::Predicate;
-    /// let locality = Predicate::new(); // matches every bytes
+    /// # use bswp::PositionPredicate;
+    /// let every_bytes = Predicate::new(); // matches every bytes
+    /// let even_bytes = Predicate::new().with_periodicity(2); // matches even bytes positions
+    /// let odd_bytes = Predicate::new().with_periodicity(2).with_offset(1); // matches odd byte positions
+    /// let four_first_bytes = Predicate::new().with_limit(4); // 4 fist bytes
     /// ```
     pub fn new() -> Predicate {
         Predicate::default()
@@ -123,17 +126,20 @@ impl Predicate {
 }
 
 impl PositionPredicate for Predicate {
-    /// Returns `true` if `position` matches locality rules else `false`.
+    /// Returns `true` if `position` matches predicate else `false`.
     ///
     /// ```
-    /// use bswp::PositionPredicate;
-    /// use bswp::pattern::Predicate;
-    /// let locality = Predicate::new().with_periodicity(2).with_offset(3);  // every 2 bytes for position >= 3
-    /// assert!(!locality.eval(0));
-    /// assert!(!locality.eval(1));
-    /// assert!(locality.eval(3));
-    /// assert!(!locality.eval(4));
-    /// assert!(locality.eval(5));
+    /// # use bswp::pattern::Predicate;
+    /// # use bswp::PositionPredicate;
+    /// let every_bytes = Predicate::new(); // matches every bytes
+    /// assert!(every_bytes.eval(42));
+    /// let even_bytes = Predicate::new().with_periodicity(2); // matches even bytes positions
+    /// assert!(even_bytes.eval(0) && even_bytes.eval(2));
+    /// let odd_bytes = Predicate::new().with_periodicity(2).with_offset(1); // matches odd byte positions
+    /// assert!(odd_bytes.eval(1) && odd_bytes.eval(3));
+    /// let four_first_bytes = Predicate::new().with_limit(4); // 4 fist bytes
+    /// assert!(four_first_bytes.eval(0) && four_first_bytes.eval(2) &&
+    ///         four_first_bytes.eval(3) && four_first_bytes.eval(3));
     /// ```
     fn eval(&self, position: usize) -> bool {
         (position >= self.offset)
@@ -187,43 +193,43 @@ mod tests {
 
     #[test]
     fn test_eval_2_3_none() {
-        let locality = Predicate::new().with_periodicity(2).with_offset(3);
+        let predicate = Predicate::new().with_periodicity(2).with_offset(3);
         let unexpected_vec: Vec<usize> = vec![0, 1, 2, 4, 6, 8];
         let expected_vec: Vec<usize> = vec![3, 5, 7, 9];
         for unexpected in unexpected_vec {
-            assert!(!locality.eval(unexpected));
+            assert!(!predicate.eval(unexpected));
         }
         for expected in expected_vec {
-            assert!(locality.eval(expected));
+            assert!(predicate.eval(expected));
         }
     }
 
     #[test]
     fn test_eval_2_3_2() {
-        let locality = Predicate::new()
+        let predicate = Predicate::new()
             .with_periodicity(2)
             .with_offset(3)
             .with_limit(2);
         let unexpected_vec: Vec<usize> = vec![0, 1, 2, 4, 6, 7, 8, 9]; // 7, 9 unexpected because of limit
         let expected_vec: Vec<usize> = vec![3, 5];
         for unexpected in unexpected_vec {
-            assert!(!locality.eval(unexpected), "{} is unexpected", unexpected);
+            assert!(!predicate.eval(unexpected), "{} is unexpected", unexpected);
         }
         for expected in expected_vec {
-            assert!(locality.eval(expected));
+            assert!(predicate.eval(expected));
         }
     }
 
     #[test]
     fn test_eval_2_1_none() {
-        let locality = Predicate::new().with_periodicity(2).with_offset(3);
+        let predicate = Predicate::new().with_periodicity(2).with_offset(3);
         let unexpected_vec: Vec<usize> = vec![0, 2, 4, 6, 8];
         let expected_vec: Vec<usize> = vec![3, 5, 7, 9];
         for unexpected in unexpected_vec {
-            assert!(!locality.eval(unexpected));
+            assert!(!predicate.eval(unexpected));
         }
         for expected in expected_vec {
-            assert!(locality.eval(expected));
+            assert!(predicate.eval(expected));
         }
     }
 

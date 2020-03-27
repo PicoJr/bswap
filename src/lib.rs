@@ -41,33 +41,13 @@ pub const BUFFER_SIZE: usize = 8000; // 8KB
 
 /// Predicate on byte position.
 pub trait PositionPredicate {
-    /// Returns `true` if `position` matches locality rules else `false`.
-    ///
-    /// ```
-    /// use bswp::PositionPredicate;
-    /// use bswp::pattern::Predicate;
-    /// let locality = Predicate::new().with_periodicity(2).with_offset(3);  // every 2 bytes for position >= 3
-    /// assert!(!locality.eval(0));
-    /// assert!(!locality.eval(1));
-    /// assert!(locality.eval(3));
-    /// assert!(!locality.eval(4));
-    /// assert!(locality.eval(5));
-    /// ```
+    /// Returns `true` if `position` matches predicate else `false`.
     fn eval(&self, position: usize) -> bool;
 }
 
 /// Pattern on byte.
 pub trait BytePattern {
     /// Returns the value with current pattern applied.
-    ///
-    /// ```
-    /// use bswp::pattern::Pattern;
-    /// use bswp::BytePattern;
-    /// let byte_pattern = Pattern::new(0xFF).with_mask(0xF0);
-    /// assert_eq!(byte_pattern.eval(0x00), 0xF0);
-    /// let byte_pattern = Pattern::new(0b10101111).with_mask(0b10011010);
-    /// assert_eq!(byte_pattern.eval(0b00000000), 0b10001010);
-    /// ```
     fn eval(&self, value: u8) -> u8;
 }
 

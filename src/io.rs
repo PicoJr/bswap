@@ -44,8 +44,8 @@ pub fn swap_io<P: BytePattern, Q: PositionPredicate>(
         }
         for (position_in_buffer, item) in buffer.iter_mut().enumerate().take(size) {
             let byte_position = position + position_in_buffer; // position relative to reader start
-            for (pattern, locality) in swaps {
-                if locality.eval(byte_position) {
+            for (pattern, predicate) in swaps {
+                if predicate.eval(byte_position) {
                     *item = pattern.eval(*item);
                 }
             }
