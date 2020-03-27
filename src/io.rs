@@ -1,6 +1,6 @@
 //! Byte swap IO utils (mut)
 
-use crate::{Swap, BUFFER_SIZE};
+use crate::{BytePattern, PositionPredicate, BUFFER_SIZE};
 use std::io::{Read, Write};
 
 /// For each byte in `reader` compute pattern and write result to `writer`.
@@ -15,8 +15,7 @@ use std::io::{Read, Write};
 ///
 /// ```
 /// use std::io::Cursor;
-/// use bswp::pattern::{BytePattern, Locality};
-/// use bswp::Swap;
+/// use bswp::pattern::{Pattern, Predicate};
 /// use bswp::io::swap_io;
 ///
 /// // in memory reader (implements `Read`)
@@ -24,29 +23,30 @@ use std::io::{Read, Write};
 /// // in memory writer (implements `Write`)
 /// let mut writer: Cursor<Vec<u8>> = Cursor::new(Vec::new());
 ///
-/// let swaps: &[Swap] = &[(BytePattern::new(0x42, 0xFF), Locality::new(2, 0))];
+/// let swaps: &[(Pattern, Predicate)] = &[(Pattern::new(0x42).with_mask(0xFF), Predicate::new().with_periodicity(2).with_offset(0))];
 /// let swap = swap_io(&mut reader, &mut writer, swaps);
 /// assert!(swap.is_ok());
 /// assert_eq!(swap.unwrap(), 4); // 4 bytes written
 /// assert_eq!(writer.into_inner(), vec![0x42, 0x42, 0x42, 0x44])
 /// ```
-pub fn swap_io(
+pub fn swap_io<P: BytePattern, Q: PositionPredicate>(
     reader: &mut dyn Read,
     writer: &mut dyn Write,
-    swaps: &[Swap],
+    swaps: &[(P, Q)],
 ) -> Result<usize, std::io::Error> {
     let mut position: usize = 0;
     let mut buffer = [0; BUFFER_SIZE];
 
-    while let Ok(size) = reader.read(&mut buffer) {
+    loop {
+        let size = reader.read(&mut buffer)?;
         if size == 0 {
             break; // finished
         }
         for (position_in_buffer, item) in buffer.iter_mut().enumerate().take(size) {
             let byte_position = position + position_in_buffer; // position relative to reader start
             for (pattern, locality) in swaps {
-                if locality.applies(byte_position) {
-                    *item = pattern.swap(*item);
+                if locality.eval(byte_position) {
+                    *item = pattern.eval(*item);
                 }
             }
         }
